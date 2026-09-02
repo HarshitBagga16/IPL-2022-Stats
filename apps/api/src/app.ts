@@ -33,6 +33,23 @@ export function createApp() {
     customSiteTitle: 'IPL 2022 API Docs',
   }));
 
+  // Welcome / Root route
+  app.get('/', (req, res) => {
+    res.json({
+      service: 'IPL 2022 Data Platform REST API',
+      status: 'online',
+      documentation: '/api-docs',
+      health: '/health',
+      endpoints: {
+        matches: '/api/matches',
+        teams: '/api/teams',
+        players: '/api/players',
+        stats: '/api/stats',
+        standings: '/api/standings',
+      },
+    });
+  });
+
   // Health check
   app.get('/health', (req, res) => {
     res.json({ status: 'ok', timestamp: new Date().toISOString(), service: 'IPL API', version: '1.0.0' });
