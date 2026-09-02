@@ -6,4 +6,6 @@ dist
 build
 *.log
 .turbo
-coverage
+coveragegit remote add origin git@github.com:HarshitBagga16/IPL-2022-Stats.git
+git branch -M main
+git push -u origin main
