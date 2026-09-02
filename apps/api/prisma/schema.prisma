@@ -1,0 +1,196 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x", "linux-musl"]
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Team {
+  id        Int     @id
+  name      String
+  shortName String
+  logoUrl   String  @default("")
+  thumbUrl  String  @default("")
+  country   String  @default("in")
+  abbr      String  @default("")
+
+  // Relations
+  matchesAsTeamA     Match[]      @relation("TeamAMatches")
+  matchesAsTeamB     Match[]      @relation("TeamBMatches")
+  matchesWon         Match[]      @relation("WinnerMatches")
+  tossWins           Match[]      @relation("TossWinnerMatches")
+  squadPlayers       SquadEntry[]
+  battingStats       BattingStat[]
+  bowlingStats       BowlingStat[]
+  standing           Standing?
+  teamStatsRecords   TeamStatEntry[]
+
+  @@map("teams")
+}
+
+model Venue {
+  id       Int     @id
+  name     String
+  location String
+  country  String  @default("India")
+
+  matches  Match[]
+
+  @@map("venues")
+}
+
+model Player {
+  id               Int     @id
+  name             String
+  shortName        String  @default("")
+  firstName        String  @default("")
+  nationality      String  @default("")
+  birthdate        String  @default("")
+  birthplace       String  @default("")
+  country          String  @default("in")
+  playingRole      String  @default("")
+  battingStyle     String  @default("")
+  bowlingStyle     String  @default("")
+  thumbUrl         String  @default("")
+  fantasyRating    Float   @default(0)
+  careerStats      Json?
+
+  squadEntries     SquadEntry[]
+  battingStats     BattingStat[]
+  bowlingStats     BowlingStat[]
+
+  @@map("players")
+}
+
+  model Match {
+    id             Int      @id
+    title          String
+    shortTitle     String   @default("")
+    subtitle       String   @default("")
+    matchNumber    String   @default("")
+    status         String   @default("Completed")
+    statusNote     String   @default("")
+
+    teamAId        Int
+    teamBId        Int
+    teamA          Team     @relation("TeamAMatches", fields: [teamAId], references: [id])
+    teamB          Team     @relation("TeamBMatches", fields: [teamBId], references: [id])
+
+    teamAScores    String   @default("")
+    teamAScoresFull String  @default("")
+    teamAOvers     String   @default("")
+    teamBScores    String   @default("")
+    teamBScoresFull String  @default("")
+    teamBOvers     String   @default("")
+
+    dateStart      DateTime
+    season         String   @default("2022")
+
+    venueId        Int
+    venue          Venue    @relation(fields: [venueId], references: [id])
+
+    umpires        String   @default("")
+    referee        String   @default("")
+
+    result         String   @default("")
+    resultType     Int      @default(0)
+    winMargin      String   @default("")
+    winningTeamId  Int?
+    winner         Team?    @relation("WinnerMatches", fields: [winningTeamId], references: [id])
+
+    tossWinnerId   Int?
+    tossWinner     Team?    @relation("TossWinnerMatches", fields: [tossWinnerId], references: [id])
+    tossDecision   Int      @default(2) // 1=bat, 2=field
+    tossText       String   @default("")
+    dlsAffected    Boolean  @default(false)
+
+    @@map("matches")
+  }
+
+model SquadEntry {
+  id        Int    @id @default(autoincrement())
+  teamId    Int
+  team      Team   @relation(fields: [teamId], references: [id])
+  playerId  Int
+  player    Player @relation(fields: [playerId], references: [id])
+
+  @@unique([teamId, playerId])
+  @@map("squad_entries")
+}
+
+model BattingStat {
+  id          Int    @id @default(autoincrement())
+  playerId    Int
+  player      Player @relation(fields: [playerId], references: [id])
+  teamId      Int
+  team        Team   @relation(fields: [teamId], references: [id])
+  statType    String // e.g. "most_runs", "highest_average", "most_sixes"
+  matches     Int    @default(0)
+  innings     Int    @default(0)
+  runs        Int    @default(0)
+  notOut      Int    @default(0)
+  highest     Int    @default(0)
+  centuries   Int    @default(0)
+  halfCenturies Int  @default(0)
+  fours       Int    @default(0)
+  sixes       Int    @default(0)
+  average     String @default("0")
+  strikeRate  String @default("0")
+  balls       Int    @default(0)
+
+  @@unique([playerId, teamId, statType])
+  @@map("batting_stats")
+}
+
+model BowlingStat {
+  id          Int    @id @default(autoincrement())
+  playerId    Int
+  player      Player @relation(fields: [playerId], references: [id])
+  teamId      Int
+  team        Team   @relation(fields: [teamId], references: [id])
+  statType    String
+  matches     Int    @default(0)
+  innings     Int    @default(0)
+  wickets     Int    @default(0)
+  runs        Int    @default(0)
+  overs       String @default("0")
+  economy     String @default("0")
+  average     String @default("0")
+  strikeRate  String @default("0")
+  maidens     Int    @default(0)
+  bestBowling String @default("")
+  fiveWickets Int    @default(0)
+  fourWickets Int    @default(0)
+
+  @@unique([playerId, teamId, statType])
+  @@map("bowling_stats")
+}
+
+model Standing {
+  id        Int    @id @default(autoincrement())
+  teamId    Int    @unique
+  team      Team   @relation(fields: [teamId], references: [id])
+  played    Int    @default(0)
+  won       Int    @default(0)
+  lost      Int    @default(0)
+  draw      Int    @default(0)
+  noResult  Int    @default(0)
+  netRunRate String @default("0")
+  points    Int    @default(0)
+  season    String @default("2022")
+
+  @@map("standings")
+}
+
+model TeamStatEntry {
+  id       Int    @id @default(autoincrement())
+  teamId   Int
+  team     Team   @relation(fields: [teamId], references: [id])
+  statType String
+  value    String @default("")
+  season   String @default("2022")
+
+  @@map("team_stat_entries")
+}
