@@ -29,7 +29,7 @@ export const api = {
   getTeamStats: (id: number) => apiClient.get(`/api/teams/${id}/stats`).then(r => r.data.data),
 
   // Matches
-  getMatches: (params?: { page?: number; limit?: number; teamId?: number; venueId?: number }) =>
+  getMatches: (params?: { page?: number; limit?: number; teamId?: number; venueId?: number; search?: string }) =>
     apiClient.get('/api/matches', { params }).then(r => r.data.data),
   getMatch: (id: number) => apiClient.get(`/api/matches/${id}`).then(r => r.data.data),
 

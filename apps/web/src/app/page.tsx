@@ -133,7 +133,7 @@ export default function HomePage() {
                   formatter={(value: any, name: any, item: any) => [`${value} runs (${item.payload.team})`, 'Runs']}
                 />
                 <Bar dataKey="runs" radius={[6, 6, 0, 0]}>
-                  {runsChartData.map((_, i) => (
+                  {runsChartData.map((_: any, i: number) => (
                     <Cell key={i} fill={COLORS[i % COLORS.length]} />
                   ))}
                 </Bar>
