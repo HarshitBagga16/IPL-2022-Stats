@@ -1,17 +1,27 @@
 import axios from 'axios';
 
+// Set the API URL based on the environment variable or default to localhost
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 
+// Create an Axios instance with default configuration
 export const apiClient = axios.create({
+  // Set the base URL for the API
   baseURL: API_URL,
+  // Set a timeout for requests (in milliseconds)
   timeout: 10000,
+  // Set default headers for requests
   headers: { 'Content-Type': 'application/json' },
 });
 
+// Add a response interceptor to handle errors globally
 apiClient.interceptors.response.use(
+  //now we can handle the response and errors in a centralized way
   (res) => res,
+  //if no error, return the response, otherwise handle the error
   (err) => {
     const message = err.response?.data?.error || err.message || 'An error occurred';
+    //we return a rejected promise with the error message, so that it can be handled in the calling code
+    //we use promise here because axios returns a promise, and we want to maintain that behavior
     return Promise.reject(new Error(message));
   }
 );

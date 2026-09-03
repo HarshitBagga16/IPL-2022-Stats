@@ -1,3 +1,4 @@
+//dashboard page for the IPL 2022 data platform, showing key statistics, recent matches, and analytics
 'use client';
 import { useQuery } from '@tanstack/react-query';
 import { api } from '@/lib/api';
