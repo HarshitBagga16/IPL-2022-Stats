@@ -4,7 +4,20 @@ A production-grade, containerized full-stack platform for exploring, querying, a
 
 ---
 
+## 🌐 Live Deployed Application
+
+| Service | Live URL | Description |
+|---|---|---|
+| **🎨 Web Application (Frontend)** | [https://ipl-2022-stats-web-sepia.vercel.app](https://ipl-2022-stats-web-sepia.vercel.app) | Next.js 14 responsive UI deployed on Vercel |
+| **📚 Interactive Swagger UI** | [https://ipl-2022-stats.onrender.com/api-docs](https://ipl-2022-stats.onrender.com/api-docs) | OpenAPI 3.0 interactive documentation |
+| **⚡ REST API Base** | [https://ipl-2022-stats.onrender.com](https://ipl-2022-stats.onrender.com) | Express + TypeScript API on Render |
+| **💚 API Healthcheck** | [https://ipl-2022-stats.onrender.com/health](https://ipl-2022-stats.onrender.com/health) | Uptime & service health probe |
+| **🗄️ Database** | `Neon Serverless PostgreSQL` | Managed PostgreSQL with 247 player career records |
+
+---
+
 ## 📑 Table of Contents
+- [Live Deployed Application](#-live-deployed-application)
 - [Architecture Overview](#-architecture-overview)
 - [Tech Stack](#-tech-stack)
 - [Database Schema & Data Modeling](#-database-schema--data-modeling)
